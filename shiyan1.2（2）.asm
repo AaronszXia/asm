@@ -1,61 +1,47 @@
 .486
-DATA SEGMENT use16
-
-sum		db	?
-
-mesg	db	'25+9=$'
-
-s		db	0,0,'$'
-
-n1		db	9
-
-n2		db	25
-		
+DATA SEGMENT USE16
+SUM     DB      ?
+MESG    DB      '25+9=$'
+S       DB      0,0,'$'
+N1      DB      9
+N2      DB      25
 DATA ENDS
-
-CODE SEGMENT use16
+CODE SEGMENT USE16
     ASSUME CS:CODE,DS:DATA
-beg:
+BEG:
     MOV AX,DATA
     MOV DS,AX
 
-	mov	bx,offset sum
-	mov	ah,n1
-	mov	al,n2
-	add	ah,al
-	mov	[bx],ah
-	
-	call	chang
-	
-	mov	ah,9
-	mov	dx,offset mesg
-	int 21h
-	
-	mov	ah,9
-	mov	dx,offset s
-	int 21h
+        MOV     BX,OFFSET SUM
+        MOV     AH,N1
+        MOV     AL,N2
+        ADD     AH,AL
+        MOV     [BX],AH
 
-    MOV AH,4CH
-    INT 21H
-    
-chang	proc
-last:
-	cmp	byte ptr [bx],10
-	jc	next
-	sub	byte ptr [bx],10
-	inc	s
-	jmp	last
-	
-next:
-	mov	bx,offset s
-	mov al,sum
-	add	byte ptr [bx+1],al
-	add byte ptr [bx],30h
-	add byte ptr [bx+1],30h
-	ret
-chang endp
-	    
+        CALL    CHANG
+        MOV     AH,9
+        MOV     DX,OFFSET MESG
+        INT     21H
+
+        MOV     AH,9
+        MOV     DX,OFFSET S
+        INT     21H
+        MOV     AH,4CH
+        INT     21H
+CHANG   PROC
+LAST:
+        CMP     BYTE PTR [BX],10
+        JC      NEXT
+        SUB     BYTE PTR [BX],10
+        INC     S
+        JMP     LAST
+NEXT:
+        MOV     BX,OFFSET S
+        MOV     AL,SUM
+        ADD     BYTE PTR [BX+1],AL
+        ADD     BYTE PTR [BX],30H
+        ADD     BYTE PTR [BX+1],30H
+        RET
+CHANG ENDP
 CODE ENDS
-    END beg
-
-
+    END BEG
